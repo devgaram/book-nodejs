@@ -1,0 +1,115 @@
+html
+	head
+		title pug 문법정리
+	body
+		div
+			h4 1) 데이터 출력방법 => 태그=변수명
+			p=msg
+		div
+			h4 2) 내부텍스트 출력방법 => | (파이프라인)사용
+			| 나는 내부텍스트 입니다.
+		div
+			h4 3) 속성 추가방법 tag명(name=value name1=value1 ...)
+			p * 동적속성 설정도 가능
+			div(class="content" id="main")
+				a(href=url data-active=isActive)
+				label
+					input(type="checkbox" checked=isCheckedTrue)
+					| checked=isCheckedTrue
+					input(type="checkbox" checked=isCheckedFalse)
+					| checked=isCheckedFalse
+					input(type="checkbox" checked=isCheckedNone)
+					| checked=isCheckedNone
+					input(type="checkbox" checked)
+					| checked
+			p 
+				|  * 태그속성 리터럴형태로 설정 가능
+				br
+				| div(class="content" id="main") 와 div.content#main 과 .content#main 은 동일한 결과 출력
+			div.content#main
+			.content#main
+		div
+			h4 4) 스크립트와 스타일볼록 출력방법 => . (도트) 사용
+			p [자바스크립트 코드 사용방법]
+			ul
+				li script.
+				li -(하이픈) 사용
+				li =(escaped), !=(unescaped)
+			script.
+				console.log('hello pug!');
+				document.write('나는 스크립트안의 코드입니다.');
+			
+			p 1. each 문, for문을 통한 반복문 
+			- var pets = ['cat', 'dog']
+			each petName, index in pets
+				p= index + ":" + petName	
+			
+			- var arr = ['<a>','<b>','<c>']
+			ul
+				- for (var i=0; i<arr.length; i++)
+					li
+						span= i
+						span!="unescaped: " + arr[i] + "vs."
+						span= "escaped: " + arr[i]
+			
+			p 2. if else 조건
+			- var user = {}
+			- user.admin = Math.random() > 0.5
+			if user.admin
+				button(class="launch") Launch Spacecraft
+			else
+				button(class="login") Log in
+			
+			p 3. 인터폴레이션은 템플릿 컴파일 시에 처리됨, js내에서 사용안함.
+			- var title = "express.js Guide"
+			p Read the #{title} in PDF
+			
+
+			p 4. case 문
+			-var coins = Math.round(Math.random()*10)
+			case coins
+				when 0
+					p no money
+				when 1
+					p have a coin
+				default
+					p have #{coins} coins!
+
+			p 5. mixin
+			p 
+				| Mixin은 파라미터를 사용하여 HTML을 만들기위한 함수
+				br
+				| 선언 mixin name(param, param2,..)
+				br
+				| 사용법 +name(data)
+
+			mixin row(items)
+				tr
+					each item, index in items
+						td= item
+
+			mixin table(tableData)
+				table
+					each row, index in tableData
+						+row(row)
+
+			- var node = [{name:"express"}, {name:"hapi"}, {name:"derby"}]
+			+table(node)
+			- var js = [{name:"backbone"}, {name:"angular"}, {name:"ember"}]
+			+table(js)
+		div
+			h4 5) 주석 처리방법 => //주석내용
+			// 
+				나는 주석입니다.
+				여러 줄 처리도 가능합니다.
+			//-
+				이 주석은 pug에서만 볼 수 있습니다.
+		div
+			h4 6) 인클루드(include) - 상위에서 하위로 처리되는 구조
+			include ./inc_ex
+		div
+			h4 7) 인스텐드(extend) - 하위에서 상위로 처리되는 구조
+				br
+				| 포함될 파일을 사용하여 주 파일 안의 바뀔 부분을 처리
+			block footer
+				p footer입니다.

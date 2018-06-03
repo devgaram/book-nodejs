@@ -6,13 +6,14 @@ var app = express();
 
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
+app.locals.pretty= true;
 
 /*
 	라우터는 정의된 순서대로 처리되며, 보통 미들웨어 뒤에 위치하지만
 	일부 미들웨어는 라우터의 뒤에 위치한다.(에러핸들러)
 */
-app.all('*', (req, res)=> {
+app.get('/', (req, res)=> {
 	/*
 		res.render(viewName, data, callback(error, html)) 
 		viewName : 파일 확장자가 있는 템플릿명 또는 뷰엔진이 설정된 경우 파일 확장자가 없는 템플릿 이름
@@ -24,8 +25,18 @@ app.all('*', (req, res)=> {
 	*/
 	res.render(
 		'index', 
-		{ msg: 'Welcome to the Practical node.js!'}
+		{ 
+			msg: '나는 로컬데이터입니다.',
+			url: "/logout",
+			isActive: true,
+			isCheckedFalse: false,
+			isCheckedTrue: true
+
+		}
 	);
+})
+app.get('/ext_ex', (req, res)=>{
+	res.render('ext_ex', {title:'나는 타이틀'});
 })
 
 app.listen(app.get('port'), function () {
